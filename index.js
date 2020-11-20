@@ -21,8 +21,12 @@ const http = axios.create({
 /* Initialize variables */
 const prefix = "!";
 let bolotaRages = 0;
+let vazRages = 0;
 http.get('bolotaRageCount.json').then(response => {
     bolotaRages = response.data;
+})
+http.get('vazRageCount.json').then(response => {
+    vazRages = response.data;
 })
 
 /* Listen to messages */
@@ -53,7 +57,18 @@ client.on("message", function(message) {
                 .catch(function(err){
                     console.error(err);
                 })
-            message.reply(`Bolota deu rage ${bolotaRages} vez(es).`);
+            message.reply(`Bolota deu rage ${bolotaRages} vezes.`);
+            break;
+        case "vaz":
+            vazRages += 1;
+            http.put('https://discord-bot-92115.firebaseio.com/vazRageCount.json', vazRages.toString())
+                .then(function(res){
+                    console.log(res);
+                })
+                .catch(function(err){
+                    console.error(err);
+                })
+            message.reply(`Vaz deu rage ${vazRages} vezes.`);
             break;
         default:
             message.reply('Esse comando não existe');
